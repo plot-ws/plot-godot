@@ -59,6 +59,28 @@ func interpolate(path: String, type: String, render_delay: float = 100.0) -> voi
         assert(existing.path != path, "interpolate: path already registered: " + path)
     _interpolators.append(PlotInterpolator.new(path, type, render_delay))
 
+# Sample the interpolated value at a single path at an arbitrary past server
+# timestamp — the rendering-side analogue of the server's `ctx.rewindTo`.
+# Reuses the same SnapshotBuffer + lerp + wildcard resolver the live frame loop
+# uses; pure read, never touches the frame loop or correction state.
+#
+# `at_server_ts` is in the server time domain (same as snapshot ts); convert a
+# client time with `client_now - server_clock_offset()`. Returns a single value
+# for a plain path, a Dictionary keyed by resolved path for a `*` wildcard, or
+# null when `at_server_ts` is outside the buffer's retained horizon.
+func sample_at(path: String, type: String, at_server_ts: float):
+    return PlotSampler.sample_at(_buffer, path, type, at_server_ts)
+
+# Bind a PlotRewind handle to a fixed past server timestamp so callers can read
+# several paths at one frozen instant ergonomically. Thin wrapper over the same
+# buffer lookup + lerp as sample_at.
+func rewind_to(at_server_ts: float) -> PlotRewind:
+    return PlotRewind.new(_buffer, at_server_ts)
+
+# Current median client->server clock offset (client_now - server_ts).
+func server_clock_offset() -> float:
+    return _clock.offset
+
 # Adaptive smoothing: when enabled, the render delay grows with measured
 # jitter so bursty links buffer more. effective extra = clamp(gain * jitter,
 # 0, max_extra_ms), added on top of each interpolator's base render_delay.

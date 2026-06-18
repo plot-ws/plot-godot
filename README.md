@@ -47,6 +47,30 @@ room.set_adaptive_smoothing(true, 1.0, 100.0)
 Supported types: `"number"`, `"vec2"`, `"vec3"`, `"quat"`; vector/quat values
 are `{x, y, z[, w]}` dictionaries. Paths support a single-level `*` wildcard.
 
+### Rewind / point sampling
+
+Sample interpolated state at an arbitrary past server time — the rendering-side
+analogue of the server's `ctx.rewindTo` (e.g. client-side hit detection). Pure
+read: it never touches the frame loop or correction state.
+
+```gdscript
+# at_server_ts is in the server time domain; convert a client time with
+# Time.get_unix_time_from_system() * 1000.0 - room.server_clock_offset().
+var past: float = now - room.server_clock_offset() - 120.0 # 120ms ago
+
+# One path: returns {x, y} for vec2, or null when `past` is outside the
+# buffer's retained horizon.
+var p1 = room.sample_at("players.p1.position", "vec2", past)
+
+# Wildcard: a Dictionary keyed by resolved path, or null.
+var all = room.sample_at("players.*.position", "vec2", past)
+
+# Bind once, read many paths at the same frozen instant:
+var r := room.rewind_to(past)
+var shooter = r.sample("players.p1.position", "vec2")
+var target = r.sample("players.p2.position", "vec2")
+```
+
 ## Client-side prediction (v1g)
 
 Apply local inputs immediately and reconcile against the server's
