@@ -1,3 +1,13 @@
+<p align="center"><a href="https://plot.ws"><img src=".github/banner.png" alt="Plot for Godot" width="880"></a></p>
+
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/plot-ws/plot-godot?color=0d0d0c" alt="License: MIT"></a>
+  <a href="https://docs.plot.ws/sdks/godot"><img src="https://img.shields.io/badge/docs-plot.ws-0F62FE" alt="Docs"></a>
+  <a href="https://discord.gg/plot"><img src="https://img.shields.io/badge/discord-join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <img src="https://img.shields.io/badge/Godot-4.4%2B-478CBF?logo=godotengine&logoColor=white" alt="Godot 4.4+">
+  <img src="https://img.shields.io/badge/mirror-of%20plot--ws%2Fplot-555555" alt="Mirror of plot-ws/plot">
+</p>
+
 # Plot Godot SDK
 
 GDScript multiplayer SDK for Godot 4.4+.
