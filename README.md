@@ -108,3 +108,8 @@ Do not hand-edit. SDK speaks `X-Plot-Protocol: v1b.0`.
 
 `tests/test_plot.gd` uses GdUnit4. CI runs Godot 4.4 headless via
 `chickensoft-games/setup-godot`.
+
+## Full documentation
+
+This README is the quickstart. For concepts, guides, and the server handler
+reference, see the full docs: **https://docs.plot.ws/sdks/godot**
